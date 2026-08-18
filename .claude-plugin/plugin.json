@@ -1,0 +1,12 @@
+{
+  "name": "site-audit",
+  "displayName": "Site Audit",
+  "description": "Audite un site public sur trois axes indépendants — TLS (testssl.sh), headers de sécurité (MDN HTTP Observatory) et performance (Lighthouse) — et produit un rapport comparable et actionnable.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Tanguy Le Pors",
+    "email": "14902759+Tangoal@users.noreply.github.com"
+  },
+  "license": "MIT",
+  "keywords": ["security", "tls", "ssl", "performance", "lighthouse", "audit", "headers"]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "site-audit-marketplace",
+  "owner": {
+    "name": "Tanguy Le Pors",
+    "email": "14902759+Tangoal@users.noreply.github.com"
+  },
+  "plugins": [
+    {
+      "name": "site-audit",
+      "source": "./",
+      "description": "Audite un site public sur trois axes indépendants — TLS, headers de sécurité, performance — et produit un rapport comparable et actionnable."
+    }
+  ]
+}
