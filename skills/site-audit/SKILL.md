@@ -76,14 +76,18 @@ curl -sI https://www.exemple.fr/ | head -5
 
 Pour chaque domaine canonique retenu :
 
-1. **TLS + protocole** :
+1. **TLS + protocole + expiration certif** :
    ```
-   <chemin testssl.sh> --quiet --color 0 --fast <domaine> 2>&1 | grep -E "^\s*(TLS 1|ALPN|HTTP2|Overall Grade|Heartbleed|POODLE|ROBOT|FREAK|DROWN|LOGJAM|BEAST)"
+   <chemin testssl.sh> --quiet --color 0 --fast <domaine> 2>&1 | grep -E "^\s*(TLS 1|ALPN|HTTP2|Overall Grade|Certificate Validity|Heartbleed|POODLE|ROBOT|FREAK|DROWN|LOGJAM|BEAST)"
    ```
    Le grep élargi (`ALPN`, `HTTP2`) fait remonter le support HTTP/2 (h2) —
    pas besoin d'outil séparé. testssl.sh ne teste pas HTTP/3/QUIC (UDP) ; le
    header `alt-svc: h3=...` vu dans la réponse HTTP (étape 2) suffit à
    confirmer que HTTP/3 est *annoncé*, sans garantir qu'il fonctionne.
+   `Certificate Validity` donne la date d'expiration — c'est le risque le
+   plus bête et le plus fréquent (site qui tombe parce que personne n'a vu
+   le renouvellement expirer) ; le signaler en alerte dans le rapport si
+   l'échéance est proche (testssl.sh l'annonce déjà lui-même sous ~30-60j).
 2. **Headers** :
    ```
    npx --yes @mdn/mdn-http-observatory <domaine>
@@ -102,15 +106,19 @@ Pour chaque domaine canonique retenu :
    Lire les scores dans `categories.*.score` (× 100). Regarder aussi
    l'audit `audits["uses-http2"]` (liste les ressources encore servies en
    HTTP/1.1 malgré un site en h2).
-4. **Email (SPF/DKIM/DMARC)** — un seul `dig`, aucun outil à installer :
+4. **Email (SPF/DKIM/DMARC) + CAA** — quelques `dig`, aucun outil à installer :
    ```
    dig +short TXT <domaine> | grep spf
    dig +short TXT _dmarc.<domaine>
+   dig +short CAA <domaine>
    ```
    Le DKIM ne peut pas être vérifié en aveugle (le sélecteur — ex.
    `google._domainkey` — n'est pas standard et dépend du fournisseur
    d'emailing) : le signaler comme non vérifiable plutôt que de deviner un
    sélecteur au hasard, sauf si l'utilisateur en connaît un.
+   Le CAA restreint qui a le droit d'émettre un certificat pour le domaine ;
+   son absence n'est pas une faille en soi (n'importe quelle CA peut émettre
+   par défaut) mais c'est un renforcement facile à recommander.
 
 ### CMS / plugins vulnérables (optionnel, sur proposition seulement)
 
@@ -129,9 +137,10 @@ précisant que :
 
 ## Rapport
 
-Un tableau markdown : une ligne par domaine canonique, colonnes TLS / HTTP2-3
-/ Headers / Email / Perf. Sous le tableau, lister concrètement les points en
-échec (headers manquants, SPF/DMARC absent, score perf bas) avec la piste de
+Un tableau markdown : une ligne par domaine canonique, colonnes TLS
+(avec date d'expiration certif) / HTTP2-3 / Headers / Email+CAA / Perf. Sous
+le tableau, lister concrètement les points en échec (headers manquants,
+SPF/DMARC/CAA absent, certif proche de l'expiration, score perf bas) avec la piste de
 correction si évidente (ex: middleware reverse-proxy pour ajouter
 CSP/HSTS/X-Frame-Options). Mentionner explicitement le résultat de l'étape 0
 (apex→www redirige correctement / les deux formes sont indépendantes). Si un
