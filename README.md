@@ -2,7 +2,8 @@
 
 Un [skill Claude Code](https://docs.claude.com/en/docs/claude-code/skills) qui
 audite un site public sur trois axes indépendants — TLS, headers de sécurité
-HTTP, performance — en s'appuyant sur trois outils open source établis :
+HTTP, performance — en s'appuyant sur trois outils open source établis, puis
+complète avec deux modules de contrôles passifs et un suivi dans le temps :
 
 | Axe | Outil | Équivalent web connu |
 |---|---|---|
@@ -13,8 +14,44 @@ HTTP, performance — en s'appuyant sur trois outils open source établis :
 Le skill ne réinvente aucun de ces outils : il sait où les trouver, les
 installe à la demande s'ils manquent (clone `testssl.sh`, télécharge un
 Chrome pour Lighthouse si besoin), les lance, et transforme leur sortie brute
-en un rapport comparable et actionnable — au lieu de trois JSON séparés à
-interpréter à la main.
+en un rapport actionnable — au lieu de trois JSON séparés à interpréter à la
+main.
+
+## Modules complémentaires
+
+Sans outil à installer (`curl` et `dig` suffisent), lecture seule :
+
+| Module | Contrôles |
+|---|---|
+| Durcissement et exposition | `security.txt`, flags des cookies (`Secure`, `HttpOnly`, `SameSite`), fuite de version serveur (`Server`, `X-Powered-By`), mixed content et ressources tierces, DNSSEC, MTA-STS et TLS-RPT |
+| Conventions IA | `robots.txt` et `Content-signal`, `sitemap.xml`, `llms.txt`, JSON-LD (Schema.org), Markdown for Agents |
+
+Le premier relève de la sécurité. Le second mesure l'adoption de conventions
+volontaires ou émergentes : ses constats sont présentés comme des options, pas
+comme des échecs. Le détail de chaque contrôle est dans
+`skills/site-audit/references/`.
+
+## Historique
+
+Chaque audit est enregistré dans `~/.cache/site-audit/history/<domaine>/<date>.json`.
+Au lancement suivant, le rapport ajoute une colonne Δ qui signale les
+régressions (grade qui baisse, score perf qui chute, certificat proche de
+l'expiration, nouveau point en échec) puis les améliorations. Les fichiers
+restent sur votre machine. Supprimez le dossier pour repartir de zéro.
+
+## Rapport HTML et PDF
+
+En plus du tableau markdown, le skill génère un rapport HTML sobre et
+autonome (un seul fichier, thème clair/sombre, adapté à l'impression) dans
+`~/.cache/site-audit/reports/<domaine>/<date>.html`. Un PDF peut en être tiré
+sur demande avec le Chrome déjà utilisé par Lighthouse. Le gabarit est dans
+`skills/site-audit/references/report-template.html`.
+
+## Si un outil est indisponible
+
+Le skill ne bloque pas l'audit. Si `testssl.sh` ne peut pas être installé
+(par exemple un clone vide), le TLS est marqué « non mesuré » et complété par
+un sondage `openssl` indicatif, jamais par une note inventée.
 
 ## Installation
 

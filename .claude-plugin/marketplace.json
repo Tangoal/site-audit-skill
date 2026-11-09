@@ -8,7 +8,7 @@
     {
       "name": "site-audit",
       "source": "./",
-      "description": "Audite un site public sur trois axes indépendants — TLS, headers de sécurité, performance — et produit un rapport comparable et actionnable."
+      "description": "Audite un site public (TLS, headers, performance, cookies, DNSSEC, conventions IA) et suit l'évolution entre deux audits."
     }
   ]
 }

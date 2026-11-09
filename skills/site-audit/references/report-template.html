@@ -1,0 +1,81 @@
+<!doctype html>
+<!--
+  Gabarit du rapport HTML de /site-audit. Fichier unique, sans dépendance externe.
+  Remplacer chaque {{PLACEHOLDER}}. Les blocs marqués REPEAT se dupliquent (une copie par ligne / constat) ;
+  supprimer un bloc entier s'il ne s'applique pas (ex. aucune section « À traiter »).
+  Classes de statut des lignes de tableau : ok (vert), warn (orange), none (gris, non mesuré / absent / option).
+  Ne jamais ajouter de score global.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audit {{DOMAINE}} — {{DATE_ISO}}</title>
+<style>
+  :root { --bg: #ffffff; --ink: #1a1a1a; --muted: #767676; --line: #e6e6e6; --ok: #2e7d32; --warn: #b26a00; --none: #9a9a9a; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161616; --ink: #e8e8e8; --muted: #9a9a9a; --line: #2e2e2e; --ok: #6fcf7a; --warn: #f0b24a; --none: #7a7a7a; }
+  }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 680px; margin: 0 auto; padding: 48px 16px 64px; }
+  h1 { font-size: 1.6rem; margin: 0; font-weight: 650; }
+  .sub { color: var(--muted); margin: 4px 0 0; }
+  h2 { font-size: 1rem; margin: 44px 0 10px; font-weight: 650; }
+  p { margin: 0 0 10px; }
+  .muted { color: var(--muted); }
+  code { font: .9em ui-monospace, Menlo, monospace; }
+
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 9px 0; border-bottom: 1px solid var(--line); vertical-align: baseline; }
+  td:first-child { width: 38%; }
+  td:last-child { text-align: right; white-space: nowrap; }
+  .dot { display: inline-block; width: .6em; height: .6em; border-radius: 50%; margin-right: .5em; }
+  .ok .dot { background: var(--ok); } .warn .dot { background: var(--warn); } .none .dot { background: var(--none); }
+
+  ol { padding-left: 1.2em; margin: 0; }
+  li { margin-bottom: 14px; }
+  li .fix { display: block; color: var(--muted); }
+  footer { margin-top: 48px; color: var(--muted); font-size: .85rem; }
+
+  @media print { main { padding: 0; } li, tr { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>{{DOMAINE}}</h1>
+  <p class="sub">Audit du {{DATE_LISIBLE}} · {{PREMIER_AUDIT_OU_DELTA}}</p>
+
+  <h2>Synthèse</h2>
+  <table>
+    <!-- REPEAT : une ligne par axe mesuré. Le dernier <td> donne le statut (classe ok / warn / none) et la valeur.
+         Si un historique existe, ajouter le delta dans la valeur : « A (110) ↑ depuis B+ », « 71 ↓ −9 ». -->
+    <tr><td>{{AXE}}</td><td class="{{STATUT}}"><span class="dot"></span>{{VALEUR}}</td></tr>
+  </table>
+  <p class="muted" style="margin-top:12px">Chaque ligne est indépendante : il n'y a pas de score global.
+  {{NOTE_APEX_WWW_SI_PERTINENT}}</p>
+
+  <h2>À traiter</h2>
+  <!-- Classer par gravité décroissante. Régressions depuis le dernier audit en premier. -->
+  <ol>
+    <!-- REPEAT -->
+    <li><strong>{{TITRE_COURT}}.</strong> {{CONSTAT_EN_UNE_PHRASE}}
+      <span class="fix">{{PISTE_DE_CORRECTION}}</span></li>
+  </ol>
+
+  <h2>Conventions IA</h2>
+  <p class="muted">Des options, pas des échecs.</p>
+  <table>
+    <!-- REPEAT : robots.txt, sitemap.xml, llms.txt, JSON-LD, Markdown for Agents. Toujours la classe none ou ok, jamais warn. -->
+    <tr><td>{{CONVENTION}}</td><td class="{{STATUT}}"><span class="dot"></span>{{ETAT}}</td></tr>
+  </table>
+
+  <h2>Déjà en place</h2>
+  <p>{{POINTS_SAINS_SEPARES_PAR_DES_POINTS_MEDIANS}}</p>
+
+  <footer>
+    Outils : {{OUTILS_UTILISES}}. {{NOTE_SI_UN_OUTIL_INDISPONIBLE}}
+  </footer>
+</main>
+</body>
+</html>
