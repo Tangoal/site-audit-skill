@@ -12,7 +12,7 @@ HTTPS/TLS/DNS normales, jamais d'écriture ni de modification.
 
 | Outil | Mesure | Équivalent web connu |
 |---|---|---|
-| [`testssl.sh`](https://github.com/drwetter/testssl.sh) | Config TLS/certif, ciphers, vulnérabilités connues (Heartbleed, POODLE, ROBOT...) | ssllabs.com/ssltest |
+| [`testssl.sh`](https://github.com/testssl/testssl.sh) | Config TLS/certif, ciphers, vulnérabilités connues (Heartbleed, POODLE, ROBOT...) | ssllabs.com/ssltest |
 | [`@mdn/mdn-http-observatory`](https://github.com/mdn/mdn-http-observatory) | Headers de sécurité HTTP (CSP, HSTS, X-Frame-Options...) | developer.mozilla.org/observatory |
 | [Lighthouse](https://github.com/GoogleChrome/lighthouse) | Performance, accessibilité, best-practices, SEO | pagespeed.web.dev |
 
@@ -46,7 +46,7 @@ base sans confirmation explicite).
 **2. `testssl.sh`** — chercher dans l'ordre :
    - `testssl.sh` dans le `PATH` (`command -v testssl.sh`)
    - un clone existant dans `~/.cache/site-audit/testssl.sh/testssl.sh`
-   - sinon cloner : `git clone --depth 1 https://github.com/drwetter/testssl.sh.git ~/.cache/site-audit/testssl.sh`
+   - sinon cloner : `git clone --depth 1 --branch 3.2 https://github.com/testssl/testssl.sh.git ~/.cache/site-audit/testssl.sh`
    - **Toujours vérifier le résultat du clone** (`test -x ~/.cache/site-audit/testssl.sh/testssl.sh`) :
      git peut réussir en silence sur un dépôt vide (« You appear to have
      cloned an empty repository »). Si le script est absent, supprimer le

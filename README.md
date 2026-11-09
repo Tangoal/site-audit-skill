@@ -7,7 +7,7 @@ complète avec deux modules de contrôles passifs et un suivi dans le temps :
 
 | Axe | Outil | Équivalent web connu |
 |---|---|---|
-| TLS / certificat | [testssl.sh](https://github.com/drwetter/testssl.sh) | ssllabs.com/ssltest |
+| TLS / certificat | [testssl.sh](https://github.com/testssl/testssl.sh) | ssllabs.com/ssltest |
 | Headers de sécurité | [MDN HTTP Observatory](https://github.com/mdn/mdn-http-observatory) | developer.mozilla.org/observatory |
 | Performance | [Lighthouse](https://github.com/GoogleChrome/lighthouse) | pagespeed.web.dev |
 
