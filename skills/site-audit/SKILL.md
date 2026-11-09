@@ -205,8 +205,11 @@ Chaque audit est enregistré, pour que le suivant puisse dire ce qui a changé.
 `ls ~/.cache/site-audit/history/<domaine>/ | sort | tail -1`. S'il existe, le
 lire : c'est la référence pour la colonne Δ.
 
-**Après** l'audit, écrire `~/.cache/site-audit/history/<domaine>/<AAAA-MM-JJ>.json`
-(créer le dossier au besoin ; si le fichier du jour existe, l'écraser) :
+**Après** l'audit, écrire `~/.cache/site-audit/history/<domaine>/<AAAA-MM-JJ>T<HHMM>.json`
+(heure locale, créer le dossier au besoin). **Ne jamais écraser un fichier
+existant** : deux audits le même jour (avant puis après une correction) doivent
+rester comparables. Le tri alphabétique donne l'ordre chronologique, y compris
+pour d'anciens fichiers nommés `<AAAA-MM-JJ>.json` :
 
 ```json
 {
@@ -259,8 +262,9 @@ unique, sans dépendance externe, qui s'ouvre hors ligne et s'envoie tel quel.
   `{{PLACEHOLDER}}`, dupliquer ou supprimer les blocs `REPEAT`). Ne pas
   réinventer le design : page sobre, une colonne, un point de couleur par
   ligne, jamais de score global.
-- Écrire dans `~/.cache/site-audit/reports/<domaine>/<AAAA-MM-JJ>.html`
-  (créer le dossier). Donner le chemin complet à l'utilisateur.
+- Écrire dans `~/.cache/site-audit/reports/<domaine>/<AAAA-MM-JJ>T<HHMM>.html`
+  (créer le dossier, même convention de nom que l'historique, ne rien écraser).
+  Donner le chemin complet à l'utilisateur.
 - Le contenu est celui du rapport markdown, pas un autre : mêmes constats,
   même ordre de gravité, mêmes deltas. Pas de donnée sensible dedans.
 - Vérifier le rendu avant de le présenter : capture avec le Chrome déjà
